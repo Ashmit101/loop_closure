@@ -33,11 +33,12 @@ def matchFeature(description):
     differences = []
 
     for des in descriptors:
-        matchesList = bf.knnMatch(des, description, k=1)
+        matchesList = bf.match(des, description)
+        matchesList = sorted(matchesList, key = lambda x:x.distance)[:10]
         distances = []
         for matches in matchesList:
             if matches:
-                distance = matches[0].distance
+                distance = matches.distance
                 distances.append(distance)
         average = sum(distances) / len(distances)
         differences.append(average)
@@ -50,9 +51,12 @@ def drawMatches(image, indexOfImageFromDataset):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     kp1, des1 = detector.detectAndCompute(image, mask=None)
     kp2, des2 = keypoints[indexOfImageFromDataset], descriptors[indexOfImageFromDataset]
-    matches = bf.knnMatch(des1, des2, k=1)
+    matches = bf.match(des1, des2)
+    matches = sorted(matches, key = lambda x:x.distance)
+
     imageFromDataset = cv2.imread(f'./data/my_frame_{indexOfImageFromDataset}.png')
-    matchedImage = cv2.drawMatchesKnn(imageFromDataset, kp2, image, kp1, matches, None,
+    
+    matchedImage = cv2.drawMatches(imageFromDataset, kp2, image, kp1, matches[:10], None,
                                         flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
     cv2.resize(matchedImage, (WINDOW_WIDTH * 2, WINDOW_HEIGHT))
     cv2.imshow(WINDOW_NAME, matchedImage)
