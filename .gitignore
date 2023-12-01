@@ -1,0 +1,6 @@
+.vscode/
+*.bin
+*.swp
+*.mp4
+data/
+pyfbow/
