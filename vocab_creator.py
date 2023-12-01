@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import pyfbow as bow
+import os
 
 TIME_INTERVAL = 1 # seconds
 WINDOW_WIDTH = 1920//2
@@ -31,6 +32,10 @@ cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL)
 cv2.resizeWindow(WINDOW_NAME, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 des_list = []
+
+if not os.path.exists('./data'):
+    os.makedirs('./data')
+    print('Directory "data" created.')
 
 def compute_features(frame):
     gr = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
